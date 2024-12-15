@@ -14,7 +14,7 @@
 
             <v-main>
                 <v-container>
-                    <h1>Main Content</h1>
+                    <h1>Cadastro de Usuários</h1>
                     <Form></Form>
                     <v-separator></v-separator>
                     <ListUser></ListUser>

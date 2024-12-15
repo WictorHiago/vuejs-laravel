@@ -14,12 +14,32 @@ Portfolio: https://wictordev.vercel.app/
 
 ## Requisitos
 
+- Docker
+- Node.js
 - PHP >= 8.2
 - Composer
 - Laravel 11.x
 - Banco de Dados PostgreSQL (ou qualquer outro banco compatível)
 
 ## Instalação
+
+## POSTGRESQL
+
+Crie a imagem do banco de dados PostgreSQL e inicie o container:
+
+Via Docker Compose:
+
+```bash
+docker-compose up -d
+```
+
+Via comando Docker:
+
+```bash
+docker run -d --name postgres_laravel -p 5432:5432 -e POSTGRES_DB=laravel_db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres postgres:15-alpine
+```
+
+## Diretório Backend
 
 1. Clone o repositório:
     ```bash
@@ -53,7 +73,12 @@ Portfolio: https://wictordev.vercel.app/
     php artisan migrate
     ```
 
-8. Inicie o servidor de desenvolvimento:
+8. Execute os seeders para popular o banco de dados:
+    ```bash
+    php artisan db:seed
+    ```
+
+9. Inicie o servidor de desenvolvimento:
     ```bash
     php artisan serve
     ```

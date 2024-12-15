@@ -5,6 +5,10 @@ export default defineNuxtConfig({
     transpile: ['vuetify'],
   },
 
+  plugins: [
+    {src: '~/plugins/axios.ts', mode: 'client'},
+  ],
+
   modules: [
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {

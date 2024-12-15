@@ -17,10 +17,10 @@
                 <v-text-field v-model="email.value.value" :error-messages="email.errorMessage.value" label="E-mail">
                 </v-text-field>
 
-                <v-text-field v-model="senha.value.value" :error-messages="senha.errorMessage.value" label="Senha">
+                <v-text-field v-model="senha.value.value" :error-messages="senha.errorMessage.value" label="Senha" type="password">
                 </v-text-field>
 
-                <v-btn class="me-4" type="submit" color="primary">
+                <v-btn class="me-4" type="submit" color="primary" :loading="loading">
                     Salvar
                 </v-btn>
 
@@ -29,12 +29,40 @@
                 </v-btn>
             </form>
         </v-card>
+
+        <!-- Snackbar para notificações -->
+        <v-snackbar
+            v-model="notification.show"
+            :color="notification.color"
+            :timeout="notification.timeout"
+            location="top"
+        >
+            {{ notification.message }}
+
+            <template v-slot:actions>
+                <v-btn
+                    variant="text"
+                    @click="notification.show = false"
+                >
+                    Fechar
+                </v-btn>
+            </template>
+        </v-snackbar>
     </v-container>
 </template>
 
 <script setup>
     import { ref } from 'vue'
     import { useField, useForm } from 'vee-validate'
+    import { useNuxtApp } from '#app'
+    import { useNotification } from '~/composables/useNotification'
+
+    const { $axios } = useNuxtApp()
+    const { notification, showNotification } = useNotification()
+    const loading = ref(false)
+
+    // Emitir evento para o componente pai
+    const emit = defineEmits(['user-created'])
 
     // Variável de controle do formulário
     const showForm = ref(false)
@@ -43,6 +71,9 @@
     const toggleForm = () => {
         showForm.value = !showForm.value
     }
+
+    // Regex para validação de email
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
     // Validação com vee-validate
     const { handleSubmit, handleReset } = useForm({
@@ -60,8 +91,8 @@
                 return 'A senha deve ter pelo menos 6 caracteres.'
             },
             email(value) {
-                if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
-                return 'Deve ser um e-mail válido.'
+                if (emailRegex.test(value)) return true
+                return 'Digite um e-mail válido (exemplo: usuario.123@dominio.com)'
             }
         },
     })
@@ -72,11 +103,37 @@
     const cpf = useField('cpf')
 
     // Função de envio
-    const submit = handleSubmit(values => {
-        alert(JSON.stringify(values, null, 2))
-        // Limar os campos apos o envio
-        handleReset()
-        showForm.value = false // Fecha o formulário após o envio
+    const submit = handleSubmit(async (values) => {
+        loading.value = true
+        try {
+            console.log('Enviando dados:', values)
+            
+            // Envia os dados para a API Laravel
+            const response = await $axios.post('/users', {
+                name: values.name,
+                email: values.email,
+                cpf: values.cpf,
+                password: values.senha
+            })
+
+            console.log('Resposta da API:', response.data)
+
+            // Limpar os campos após o envio
+            handleReset()
+            showForm.value = false // Fecha o formulário após o envio
+            
+            // Emitir evento com os dados do novo usuário
+            window.dispatchEvent(new CustomEvent('user-created', {
+                detail: { user: response.data.user }
+            }))
+            
+            showNotification('Usuário criado com sucesso!', 'success')
+        } catch (error) {
+            console.error('Erro ao criar usuário:', error)
+            showNotification(error.response?.data?.error || 'Erro ao criar usuário', 'error')
+        } finally {
+            loading.value = false
+        }
     })
 </script>
 
