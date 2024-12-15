@@ -1,9 +1,14 @@
 # vuejs-laravel
 Project Challenge - Crud on Vuejs + Laravel
 
-# Projeto Vuetify-Laravel Backend
-
-Este é o backend do projeto **Vuetify-Laravel**, construído com o **Laravel**. Ele expõe uma API RESTful para manipulação de usuários, com operações CRUD (Create, Read, Update, Delete).
+## Navegação
+- [Requisitos](#requisitos)
+- [PostgreSQL](#postgresql)
+- [Backend](#diretório-backend)
+- [Frontend](#diretório-frontend)
+- [API Endpoints](#endpoints-da-api)
+- [Contribuição](#contribuição)
+- [Licença](#licença)
 
 ## Autor
 
@@ -15,13 +20,13 @@ Portfolio: https://wictordev.vercel.app/
 ## Requisitos
 
 - Docker
-- Node.js
+- Node.js >= 18
 - PHP >= 8.2
 - Composer
 - Laravel 11.x
-- Banco de Dados PostgreSQL (ou qualquer outro banco compatível)
-
-## Instalação
+- Vue.js 3.x
+- Vuetify 3.x
+- Banco de Dados PostgreSQL
 
 ## POSTGRESQL
 
@@ -83,7 +88,46 @@ docker run -d --name postgres_laravel -p 5432:5432 -e POSTGRES_DB=laravel_db -e 
     php artisan serve
     ```
 
-Agora a API estará disponível em `http://localhost:8000`.
+O backend estará disponível em `http://localhost:8000`.
+
+## Diretório Frontend
+
+1. Navegue até o diretório do frontend:
+    ```bash
+    cd vuetify-laravel/front-end
+    ```
+
+2. Instale as dependências:
+    ```bash
+    npm install
+    ```
+
+3. Configure o arquivo `.env`:
+    ```bash
+    cp .env.example .env
+    ```
+
+4. No arquivo `.env`, configure a URL da API:
+    ```
+    NUXT_PUBLIC_API_BASE=http://localhost:8000
+    ```
+
+5. Inicie o servidor de desenvolvimento:
+    ```bash
+    npm run dev
+    ```
+
+O frontend estará disponível em `http://localhost:3000`.
+
+### Funcionalidades do Frontend
+
+- **Lista de Usuários**: Visualize todos os usuários cadastrados
+- **Criar Usuário**: Adicione novos usuários ao sistema
+- **Editar Usuário**: Atualize informações de usuários existentes
+- **Excluir Usuário**: Remova usuários do sistema
+- **Validação de Formulários**: Validação em tempo real dos campos
+- **Feedback Visual**: Notificações de sucesso/erro nas operações
+- **Design Responsivo**: Interface adaptável para diferentes dispositivos
 
 ## Endpoints da API
 
