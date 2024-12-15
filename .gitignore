@@ -22,3 +22,102 @@ logs
 .env
 .env.*
 !.env.example
+
+# LARAVEL ======================
+# Laravel
+/vendor/
+/node_modules/
+.env
+.env.*.backup
+
+# Laravel specific
+/storage/*.key
+/public/storage
+/public/hot
+/public/css/*.map
+/public/js/*.map
+/public/mix-manifest.json
+/public/build
+/.phpunit.result.cache
+.phpunit.result.cache
+
+# Debugbar storage
+/storage/debugbar/*
+
+# Ignoring logs and temporary files
+/storage/logs/*
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/framework/views/*
+
+# Ignoring SQLite database (if applicable)
+database/*.sqlite
+
+# Composer
+/composer.lock
+
+# npm/Yarn
+/pnpm-lock.yaml
+/yarn.lock
+/package-lock.json
+
+# Node.js
+.npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vite
+/public/build
+/public/hot
+/.vite
+/.vscode/*.db
+
+# IDE files
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# MacOS specific files
+.AppleDouble
+.LSOverride
+
+# Windows thumbnail cache
+Thumbs.db
+ehthumbs.db
+
+# Linux files
+*.swp
+*.swo
+.*.swp
+*~
+
+# Coverage reports
+/coverage/
+
+# Log files
+*.log
+
+# Temporary files
+*.temp
+*.tmp
+*.bak
+*.backup
+
+# Git
+*.orig
+*.rej
+
+# Frontend build artifacts
+/public/css/*
+/public/js/*
+/public/fonts/*
+/public/images/*
+/public/favicon.ico
+/public/index.html
