@@ -93,26 +93,18 @@ O backend estará disponível em `http://localhost:8000`.
 ## Diretório Frontend
 
 1. Navegue até o diretório do frontend:
+
     ```bash
     cd vuetify-laravel/front-end
     ```
 
 2. Instale as dependências:
+
     ```bash
     npm install
     ```
 
-3. Configure o arquivo `.env`:
-    ```bash
-    cp .env.example .env
-    ```
-
-4. No arquivo `.env`, configure a URL da API:
-    ```
-    NUXT_PUBLIC_API_BASE=http://localhost:8000
-    ```
-
-5. Inicie o servidor de desenvolvimento:
+3. Inicie o servidor de desenvolvimento:
     ```bash
     npm run dev
     ```
