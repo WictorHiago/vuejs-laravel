@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -13,17 +13,22 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        return response()->json(['users' => $users]);
+        try {
+            Log::info('Iniciando busca de usuários');
+            $users = User::all();
+            Log::info('Usuários encontrados:', ['count' => $users->count()]);
+            return response()->json(['users' => $users]);
+        } catch (\Exception $e) {
+            Log::error('Erro ao buscar usuários:', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Erro ao buscar usuários: ' . $e->getMessage()], 500);
+        }
     }
-
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        // store
         try {
             $request->validate([
                 'name' => 'required',
@@ -48,9 +53,14 @@ class UserController extends Controller
             $user->password = bcrypt($request->input('password'));
             $user->save();
 
-            return response()->json(['message' => 'Usuário criado com sucesso!', 'user' => $user], 201);
+            // Recarrega o usuário para garantir que todos os campos estão atualizados
+            $user = User::find($user->id);
+
+            Log::info('Usuário criado com sucesso', ['user_id' => $user->id]);
+            return response()->json(['message' => 'Usuário criado com sucesso!', 'user' => $user], 201);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()]);
+            Log::error('Erro ao criar usuário:', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Erro ao criar usuário: ' . $e->getMessage()], 500);
         }
     }
 
@@ -59,15 +69,19 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        $user = User::find($id);
+        try {
+            $user = User::find($id);
 
-        if (!$user) {
-            return response()->json(['error' => 'Usuário nao encontrado'], 404);
+            if (!$user) {
+                return response()->json(['error' => 'Usuário nao encontrado'], 404);
+            }
+
+            return response()->json(['user' => $user]);
+        } catch (\Exception $e) {
+            Log::error('Erro ao buscar usuário:', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Erro ao buscar usuário: ' . $e->getMessage()], 500);
         }
-
-        return response()->json(['user' => $user]);
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -103,26 +117,33 @@ class UserController extends Controller
 
             $user->save();
 
+            Log::info('Usuário atualizado com sucesso', ['user_id' => $id]);
             return response()->json(['message' => 'Usuário atualizado com sucesso!', 'user' => $user]);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()]);
+            Log::error('Erro ao atualizar usuário:', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Erro ao atualizar usuário: ' . $e->getMessage()], 500);
         }
     }
-
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        $user = User::find($id);
+        try {
+            $user = User::find($id);
 
-        if (!$user) {
-            return response()->json(['error' => 'Usuário não encontrado'], 404);
+            if (!$user) {
+                return response()->json(['error' => 'Usuário não encontrado'], 404);
+            }
+
+            $user->delete();
+
+            Log::info('Usuário deletado com sucesso', ['user_id' => $id]);
+            return response()->json(['message' => 'Usuário deletado com sucesso!']);
+        } catch (\Exception $e) {
+            Log::error('Erro ao deletar usuário:', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Erro ao deletar usuário: ' . $e->getMessage()], 500);
         }
-
-        $user->delete();
-
-        return response()->json(['message' => 'Usuário excluído com sucesso!']);
     }
 }
